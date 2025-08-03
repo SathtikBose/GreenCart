@@ -1,4 +1,3 @@
-import { request, response } from "express";
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 import stripe from "stripe";
@@ -94,19 +93,19 @@ export const placeOrderStripe = async (req, res) => {
   }
 };
 
-export const stripeWebhooks = async () => {
+export const stripeWebhooks = async (req, res) => {
   const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
-  const sig = request.headers["stripe-signature"];
+  const sig = req.headers["stripe-signature"];
   let event;
   try {
     event = stripeInstance.webhooks.constructEvent(
-      request.body,
+      req.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (error) {
-    response.status(400).send(`Webhook  Error: ${error.message}`);
+    return res.status(400).send(`Webhook Error: ${error.message}`);
   }
   switch (event.type) {
     case "payment_intent.succeeded": {
@@ -138,7 +137,7 @@ export const stripeWebhooks = async () => {
       console.error(`Unhandled Event type ${event.type}`);
       break;
   }
-  response.json({ received: true });
+  res.json({ received: true });
 };
 
 export const getUserOrders = async (req, res) => {
