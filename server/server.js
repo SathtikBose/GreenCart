@@ -15,29 +15,32 @@ import { stripeWebhooks } from "./controllers/orderController.js";
 const app = express();
 const port = process.env.PORT || 4000;
 
-// Use an async IIFE for top-level await compatibility
-(async () => {
-  await connectDB();
-  await connectCloudinary();
+await connectDB();
+await connectCloudinary();
 
-  const allowedOrigins = [process.env.FRONTEND_URL];
+const allowedOrigins = ["http://localhost:5173", process.env.FRONTEND_URL];
 
-  app.use(express.json());
-  app.use(cookieParser());
-  app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.post(
+  "/stripe",
+  express.raw({ type: "application/json" }),
+  (req, res, next) => {
+    console.log("Stripe webhook accessed");
+    stripeWebhooks(req, res, next);
+  }
+);
 
-  // Stripe webhook must be before express.json()
-  app.post("/stripe", express.raw({ type: "application/json" }), stripeWebhooks);
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 
-  app.get("/", (req, res) => res.send("Api is working"));
-  app.use("/api/user", userRouter);
-  app.use("/api/seller", sellerRouter);
-  app.use("/api/product", productRouter);
-  app.use("/api/cart", cartRouter);
-  app.use("/api/address", addressRouter);
-  app.use("/api/order", orderRouter);
+app.get("/", (req, res) => res.send("Api is working"));
+app.use("/api/user", userRouter);
+app.use("/api/seller", sellerRouter);
+app.use("/api/product", productRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/address", addressRouter);
+app.use("/api/order", orderRouter);
 
-  app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-  });
-})();
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
