@@ -20,14 +20,7 @@ await connectCloudinary();
 
 const allowedOrigins = ["http://localhost:5173", process.env.FRONTEND_URL];
 
-app.post(
-  "/stripe",
-  express.raw({ type: "application/json" }),
-  (req, res, next) => {
-    console.log("Stripe webhook accessed");
-    stripeWebhooks(req, res, next);
-  }
-);
+app.post("/webhook", express.raw({ type: "application/json" }), stripeWebhooks);
 
 app.use(express.json());
 app.use(cookieParser());

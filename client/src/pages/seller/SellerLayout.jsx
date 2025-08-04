@@ -4,7 +4,7 @@ import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
 
 const SellerLayout = () => {
-  const { axios, setIsSeller, navigate } = useAppContext();
+  const { axios, setIsSeller, navigate, fetchSeller } = useAppContext();
 
   const sidebarLinks = [
     { name: "Add Product", path: "/seller", icon: assets.add_icon },
@@ -22,6 +22,7 @@ const SellerLayout = () => {
 
       if (data.success) {
         toast.success(data.message);
+        fetchSeller();
         navigate("/");
       } else {
         toast.error(data.message);
@@ -45,7 +46,7 @@ const SellerLayout = () => {
           <p>Hi! Admin</p>
           <button
             onClick={logout}
-            className="border rounded-full text-sm px-4 py-1"
+            className="border rounded-full text-sm px-4 py-1 cursor-pointer"
           >
             Logout
           </button>
