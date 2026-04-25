@@ -47,7 +47,7 @@ function Navbar() {
       <div className="hidden sm:flex items-center gap-8">
         <Link
           to="/seller"
-          className="p-2 bg-green-500 border-2 border-gray-600 cursor-pointer hover:bg-green-600 transition duration-300  font-semibold text-white rounded-full"
+          className="border border-gray-300 px-3 py-1 rounded-full text-xs cursor-pointer opacity-80 text-black"
         >
           Seller Dashboard
         </Link>
