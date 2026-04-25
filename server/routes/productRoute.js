@@ -10,7 +10,7 @@ import {
 
 const productRouter = express.Router();
 
-productRouter.post("/add", upload.array("images"), authSeller, addProducts);
+productRouter.post("/add", authSeller, upload.array("images"), addProducts);
 productRouter.get("/list", productList);
 productRouter.get("/id", productById);
 productRouter.post("/stock", authSeller, changeStock);

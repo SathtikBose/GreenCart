@@ -21,7 +21,6 @@ const Cart = () => {
   const [showAddress, setShowAddress] = useState(false);
   const [cartArray, setCartArray] = useState([]);
   const [addresses, setAddresses] = useState([]);
-  const [showaddress, setShowAddresses] = useState(dummyAddress);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentOption, setPaymentOption] = useState("COD");
 
@@ -223,18 +222,23 @@ const Cart = () => {
             </button>
             {showAddress && (
               <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
-                {addresses.map((address, index) => (
-                  <p
-                    onClick={() => {
-                      setSelectedAddress(address);
-                      setShowAddress(false);
-                    }}
-                    className="text-gray-500 p-2 hover:bg-gray-100"
-                  >
-                    {address.street} ,{selectedAddress.city} ,{" "}
-                    {selectedAddress.state} , {selectedAddress.country}
-                  </p>
-                ))}
+                {addresses.length > 0 ? (
+                  addresses.map((address, index) => (
+                    <p
+                      key={index}
+                      onClick={() => {
+                        setSelectedAddress(address);
+                        setShowAddress(false);
+                      }}
+                      className="text-gray-500 p-2 hover:bg-gray-100"
+                    >
+                      {address.street} , {address.city} , {address.state} ,{" "}
+                      {address.country}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-gray-500 p-2">No addresses found</p>
+                )}
                 <p
                   onClick={() => navigate("/add-address")}
                   className="text-primary text-center cursor-pointer p-2 hover:bg-indigo-500/10"

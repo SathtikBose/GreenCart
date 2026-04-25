@@ -2,7 +2,6 @@ import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 import stripe from "stripe";
 import User from "../models/User.js";
-import { request, response } from "express";
 
 export const placeOrderCOD = async (req, res) => {
   try {
@@ -98,18 +97,18 @@ export const stripeWebhooks = async (req, res) => {
   console.log("Stripewebhooks function");
   const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
-  const sig = request.headers["stripe-signature"];
+  const sig = req.headers["stripe-signature"];
 
   let event;
 
   try {
     event = stripeInstance.webhooks.constructEvent(
-      request.body,
+      req.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (error) {
-    response.status(400).send(`Webhook Error: ${error.message}`);
+    res.status(400).send(`Webhook Error: ${error.message}`);
   }
 
   switch (event.type) {
